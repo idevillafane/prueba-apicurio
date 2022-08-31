@@ -1,0 +1,192 @@
+---
+openapi: 3.0.2
+info:
+  title: Ejemplo Experta
+  version: 1.0.0
+  description: API de ejemplo para mostrar en Experta
+  termsOfService: http://swagger.io/terms/
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+paths:
+  /vendedores:
+    get:
+      parameters:
+      - style: form
+        name: tags
+        description: Palabras clave para buscar vendedores
+        schema:
+          type: array
+          items:
+            type: string
+        in: query
+        required: false
+      - name: limit
+        description: Numero mÃ¡ximo de vendedores a devolver en el array
+        schema:
+          format: int32
+          type: integer
+        in: query
+        required: false
+      - name: antiguedad
+        description: AÃ±o de ingreso a la agencia
+        schema:
+          type: integer
+        in: query
+      responses:
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: unexpected error
+        "200":
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Vendedor'
+              examples:
+                vendedores_experta:
+                  value:
+                  - id: 71
+                    nombre: some text
+                    observaciones: some text
+                  - id: 53
+                    nombre: some text
+                    observaciones: some text
+          description: Lorem ipsum
+      operationId: findVendedores
+      summary: No summary
+      description: Devuelve todos los vendedores del sistema
+    post:
+      requestBody:
+        description: Vendedor para agregar
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NuevoVendedor'
+            examples:
+              remoto:
+                value:
+                  nombre: Pedro Paramo
+                  observaciones: Remoto en La Pampa
+        required: true
+      responses:
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: unexpected error
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Vendedor'
+              examples:
+                remoto:
+                  value:
+                    id: 1
+                    nombre: Pedro Paramo
+                    observaciones: Remoto en La Pampa
+          description: Vendedor response
+      operationId: addVendedor
+      description: Crea un nuevo vendedor en el sistema
+  /vendedor/{id}:
+    summary: Tomar un vendedor por id
+    get:
+      tags:
+      - Ejemplo
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Vendedor'
+              examples:
+                Sintax:
+                  value:
+                    id: 97
+                    nombre: some text
+                    observaciones: some text
+          description: Vendedor encontrado con exito
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Vendedor'
+              examples:
+                Eliminado:
+                  value:
+                    id: 40
+                    nombre: some text
+                    observaciones: some text
+          description: Vendedor creado
+      deprecated: false
+      operationId: getById
+      summary: Get un vendedor
+      description: Se devuelve un vendedor por id
+    delete:
+      tags:
+      - Delete
+      - Ejemplo
+      responses:
+        "200":
+          description: Vendedor eliminado con exito
+      operationId: deleteVendedorById
+      summary: Se elimina un usuario por id
+      description: Se elimina por id
+    parameters:
+    - examples:
+        Id cualquiera:
+          value: "11"
+      name: id
+      description: id del vendedor
+      schema:
+        format: int32
+        type: integer
+      in: path
+      required: true
+components:
+  schemas:
+    Error:
+      required:
+      - message
+      properties:
+        message:
+          type: string
+          example: '"ERROR"'
+    NuevoVendedor:
+      type: object
+      properties:
+        nombre:
+          description: ""
+          type: string
+        observaciones:
+          description: ""
+          type: string
+      example:
+        id: 1
+        nombre: Pedro Paramo
+        observaciones: Remoto en La Pampa
+    Vendedor:
+      title: Root Type for Vendedor
+      description: Datos del vendedor
+      type: object
+      properties:
+        id:
+          format: int32
+          type: integer
+        nombre:
+          type: string
+        observaciones:
+          type: string
+      example:
+        id: 1
+        nombre: Pedro Paramo
+        observaciones: Remoto en La Pampa
+tags:
+- name: Ejemplo
+  description: API de ejemplo
